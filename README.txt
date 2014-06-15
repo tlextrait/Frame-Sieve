@@ -5,10 +5,6 @@
 # www.tlextrait.com			 
 ###########################################################################
 
-I am the author of this source code and it is public domain.
-You may use it for any purpose you wish.
-
-
 HOW TO COMPILE AND RUN
 ---------------------------------------------------------------------------
 How to compile the program?
