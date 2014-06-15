@@ -176,6 +176,7 @@ int isPrime(unsigned long int a, unsigned long int* primeArray, unsigned long in
  */
 void help()
 {
+    /*
 	printf("primes - thomas.lextrait@gmail.com\n");
 	printf("usage: primes [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
 	printf("\t-f\tSpecify a file containing previously computed primes,\n\t\totherwise will use 'primes.txt'.\n");
@@ -185,5 +186,6 @@ void help()
 	printf("\t-t\tDisplay total time elapsed.\n");
 	printf("\t-h\tDisplay this help message.\n");
 	printf("\n\tFlags -m and -q can be used together, the program will\n\tstop as soon as it reaches either condition.\n");
+    */
 }
 

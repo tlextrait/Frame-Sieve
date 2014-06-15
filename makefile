@@ -1,7 +1,7 @@
 all: primes
 
 primes: primes.o file_functions.o
-	gcc -g primes.o file_functions.o -o primes
+	gcc -g primes.o file_functions.o -o sieve
 
 primes.o: primes.c primes.h file_functions.h
 	gcc -g -c primes.c
