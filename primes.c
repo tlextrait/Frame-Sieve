@@ -177,8 +177,8 @@ int isPrime(unsigned long int a, unsigned long int* primeArray, unsigned long in
 void help()
 {
     /*
-	printf("primes - thomas.lextrait@gmail.com\n");
-	printf("usage: primes [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
+	printf("sieve - thomas.lextrait@gmail.com\n");
+	printf("usage: sieve [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
 	printf("\t-f\tSpecify a file containing previously computed primes,\n\t\totherwise will use 'primes.txt'.\n");
 	printf("\t-m\tSpecify the upper limit for computing primes,\n\t\totherwise will use %li.\n", MAX_PRIME);
 	printf("\t-q\tSpecify how many prime numbers to look for,\n\t\totherwise will use %i.\n", MAX_PRIMES);
