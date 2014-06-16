@@ -5,8 +5,8 @@
 #include "file_functions.h"
 #include "primes.h"
 
-#define MAX_PRIMES 			1000000000	// max number of primes
-#define MAX_PRIME			1000000000L	// max prime number
+#define MAX_PRIMES 			2000000000	// max number of primes
+#define MAX_PRIME			2000000000L	// max prime number
 #define MAX_FILENAME_LENGTH 1024
 
 /* GLOBAL VARIABLES */
@@ -35,6 +35,8 @@ unsigned long int i = 0L;
 
 int main(int argc, char *argv[])
 {
+ 
+    printf("Initializing...\n");
     
     fileLoc = (char*)malloc(sizeof(char) * MAX_FILENAME_LENGTH);
     // Number grid
@@ -166,6 +168,11 @@ int main(int argc, char *argv[])
     }
 
 	if(verbose == 0){printf("Computed primes have been saved.\n");}
+    
+    // Clean up pointers
+    free(numbers);
+    free(last_mark);
+    free(primeArray);
     
     return 1;
 }
