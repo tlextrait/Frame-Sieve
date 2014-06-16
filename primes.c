@@ -125,14 +125,14 @@ int main(int argc, char *argv[])
             unsigned long int start = p;
             if(last_mark[p] > 0) start = last_mark[p];
             
-            for(i=start; i<=frame_max; i+=p2){
+            for(i=start; i<=frame_max && i<=max_prime; i+=p2){
                 numbers[i] = 1;
                 last_mark[p] = i;
             }
         }
         
         // Figure out primes up to frame_max
-        for(i=getLargestPrime()+2; i<=frame_max; i+=2){
+        for(i=getLargestPrime()+2; i<=frame_max && i<=max_prime; i+=2){
             if(numbers[i] == 0){
                 primeArray[primeCount] = i;
                 primeCount++;
