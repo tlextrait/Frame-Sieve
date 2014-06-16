@@ -95,10 +95,10 @@ int main(int argc, char *argv[])
     primeArray = (unsigned long int*)malloc(sizeof(unsigned long int) * (max_primes+1));
     
     // Initialize number grid
-    for(i=0L; i<MAX_PRIME; i++) numbers[i] = 0;
+    for(i=0L; i<max_prime; i++) numbers[i] = 0;
     
     // Initialize marks
-    for(i=0L; i<MAX_PRIME; i++) last_mark[i] = 0;
+    for(i=0L; i<max_prime; i++) last_mark[i] = 0;
     
     // Known primes
     primeArray[0] = 2;
