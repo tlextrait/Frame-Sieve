@@ -16,14 +16,9 @@
 void updateProgress(unsigned long int a);
 
 /**
- * Returns -1 if a/b has no remainder, 0 if there is a remainder
+ * Returns the largest prime found so far
  */
-int hasRemainder(unsigned long int a, unsigned long int b);
-
-/**
- * Returns 0 if it's a prime, -1 if it's not
- */
-int isPrime(unsigned long int a, unsigned long int* primeArray, unsigned long int primeCount);
+unsigned long int getLargestPrime();
 
 /**
  * Display a help message

@@ -1,5 +1,5 @@
 /** File primes.c
- * @author Thomas Lextrait
+ * @author Thomas Lextrait, thomas.lextrait@gmail.com
  */
 
 #include "file_functions.h"
@@ -16,21 +16,44 @@ unsigned long int max_prime = -1;
 int specFile = -1;
 int max_primes = -1;
 
+/*
+ * Unsigned Long Int (20 digits)
+ * 18.5 million trillion
+ * 18,446,744,073,709,551,615
+ */
+
+FILE *file;
+char* fileLoc;
+// Number grid
+unsigned long int *numbers;
+unsigned long int c_num = 0L;
+// Prime numbers
+unsigned long int *last_mark;
+unsigned long int *primeArray;
+unsigned long int primeCount = 0L;
+unsigned long int i = 0L;
+
 int main(int argc, char *argv[])
 {
     
-    /*
-     * Unsigned Long Int (20 digits)
-     * 18.5 million trillion
-     * 18,446,744,073,709,551,615
-     */
+    fileLoc = (char*)malloc(sizeof(char) * MAX_FILENAME_LENGTH);
+    // Number grid
+    numbers = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIME);
+    // Prime numbers
+    last_mark = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIMES);
+    primeArray = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIMES);
     
-	/* Primes */
-    FILE *file;
-	char* fileLoc = (char*)malloc(sizeof(char) * MAX_FILENAME_LENGTH);
-	unsigned long int *primeArray = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIMES);
-    unsigned long int primeCount = 0;
-    unsigned long int i;
+    // Initialize number grid
+    for(i=0L; i<MAX_PRIME; i++) numbers[i] = 0;
+    
+    // Initialize marks
+    for(i=0L; i<MAX_PRIME; i++) last_mark[i] = 0;
+    
+    // Known primes
+    primeArray[0] = 2;
+    primeArray[1] = 3;
+    primeArray[2] = 5;
+    primeCount = 3;
 
 	/* Time computations */
     unsigned long int totalTime;
@@ -78,34 +101,46 @@ int main(int argc, char *argv[])
 	if(max_primes < 0){
 		max_primes = MAX_PRIMES;
 	}
-
-	if(specFile == 0){
-		// Check the file at given path exists
-        if(loadPrimesFromFile(fileLoc, primeArray, &primeCount)!=0){
-            printf("Given file couldn't be opened, it might not exist!\n");
-            exit(1);
-        }
-	}else{
-		// Try to find a file containing previously computed primes
-        if(loadPrimesFromFile("primes.txt", primeArray, &primeCount)!=0){
-            // Create new file
-            createDefaultFile();
-            loadPrimesFromFile("primes.txt", primeArray, &primeCount);
-        }
-	}
     
     printf("Computing prime numbers...\n");
     
     if(timeShow == 0){gettimeofday(&tv1, NULL);}
     
-    for(i=primeArray[primeCount-1]+2; i < max_prime && primeCount < max_primes; i+=2){
-        if(isPrime(i, primeArray, primeCount)==0){
-            primeArray[primeCount] = i;
-            primeCount++;
-			if(verbose==0){printf("%li\n", i);}
+    // =============================================
+    // Prime number computation
+    
+    unsigned long int cprime = 0;
+    unsigned long int frame_max = 0;
+    
+    while(c_num < max_prime){
+
+        for(cprime=1; cprime<primeCount; cprime++){
+            unsigned long int p = primeArray[cprime];   // fetch prime number
+            unsigned long int p2 = p*2; // pre-multiply
+            frame_max = getLargestPrime() + getLargestPrime()*2;
+            unsigned long int start = p;
+            if(last_mark[p] > 0) start = last_mark[p];
+            
+            for(i=start; i<=frame_max; i+=p2){
+                numbers[i] = 1;
+                last_mark[p] = i;
+            }
         }
-        if(verbose!=0){updateProgress(i);}
+        
+        // Figure out primes up to frame_max
+        for(i=getLargestPrime()+2; i<=frame_max; i+=2){
+            if(numbers[i] == 0){
+                primeArray[primeCount] = i;
+                primeCount++;
+                if(verbose==0){printf("%li\n", i);}
+            }
+            if(verbose!=0){updateProgress(i);}
+        }
+        
+        c_num = frame_max;
     }
+    
+    // =============================================
 
 	printf("%li prime numbers found\n", primeCount);
     
@@ -129,6 +164,13 @@ int main(int argc, char *argv[])
 }
 
 /**
+ * Returns the largest prime found so far
+ */
+unsigned long int getLargestPrime(){
+    return primeArray[primeCount-1];
+}
+
+/**
  * Shows the computation's progress
  */
 void updateProgress(unsigned long int a){
@@ -144,48 +186,18 @@ void updateProgress(unsigned long int a){
 }
 
 /**
- * Returns -1 if a/b has no remainder, 0 if there is a remainder
- */
-int hasRemainder(unsigned long int a, unsigned long int b)
-{
-    if(a%b==0){return -1;}else{return 0;}
-}
-
-/**
- * Returns 0 if it's a prime, -1 if it's not
- */
-int isPrime(unsigned long int a, unsigned long int* primeArray, unsigned long int primeCount)
-{
-    unsigned long int i;
-    unsigned long int root = sqrt(a);
-    
-    /*
-     * We re-use previously computed prime numbers
-     * in order to determine if current number is a prime
-     */
-    
-    for(i = 0; i < primeCount && primeArray[i]<=root; i++){
-        if(hasRemainder(a, primeArray[i])==-1){return -1;}
-    }
-    
-    return 0;
-}
-
-/**
  * Display a help message
  */
 void help()
 {
-    /*
 	printf("sieve - thomas.lextrait@gmail.com\n");
 	printf("usage: sieve [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
-	printf("\t-f\tSpecify a file containing previously computed primes,\n\t\totherwise will use 'primes.txt'.\n");
+	printf("\t-f\tSpecify a file to save primes to,\n\t\totherwise will use 'primes.txt'.\n");
 	printf("\t-m\tSpecify the upper limit for computing primes,\n\t\totherwise will use %li.\n", MAX_PRIME);
 	printf("\t-q\tSpecify how many prime numbers to look for,\n\t\totherwise will use %i.\n", MAX_PRIMES);
 	printf("\t-v\tBe verbose, display each prime as it is found.\n");
 	printf("\t-t\tDisplay total time elapsed.\n");
 	printf("\t-h\tDisplay this help message.\n");
 	printf("\n\tFlags -m and -q can be used together, the program will\n\tstop as soon as it reaches either condition.\n");
-    */
 }
 
