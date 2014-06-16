@@ -5,8 +5,8 @@
 #include "file_functions.h"
 #include "primes.h"
 
-#define MAX_PRIMES 			10000000	// max number of primes
-#define MAX_PRIME			10000000L	// max prime number
+#define MAX_PRIMES 			1000000000	// max number of primes
+#define MAX_PRIME			1000000000L	// max prime number
 #define MAX_FILENAME_LENGTH 1024
 
 /* GLOBAL VARIABLES */
@@ -102,6 +102,11 @@ int main(int argc, char *argv[])
 		max_primes = MAX_PRIMES;
 	}
     
+    if(max_prime > MAX_PRIME){
+        printf("Error: the upper limit you set is too high and must be changed in primes.c\n");
+        return 0;
+    }
+    
     printf("Computing prime numbers...\n");
     
     if(timeShow == 0){gettimeofday(&tv1, NULL);}
@@ -161,6 +166,8 @@ int main(int argc, char *argv[])
     }
 
 	if(verbose == 0){printf("Computed primes have been saved.\n");}
+    
+    return 1;
 }
 
 /**
