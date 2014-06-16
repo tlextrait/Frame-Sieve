@@ -5,8 +5,8 @@
 #include "file_functions.h"
 #include "primes.h"
 
-#define MAX_PRIMES 			2000000000	// max number of primes
-#define MAX_PRIME			2000000000L	// max prime number
+#define MAX_PRIMES 			10000000	// max number of primes
+#define MAX_PRIME			10000000L	// max prime number
 #define MAX_FILENAME_LENGTH 1024
 
 /* GLOBAL VARIABLES */
@@ -37,25 +37,6 @@ int main(int argc, char *argv[])
 {
  
     printf("Initializing...\n");
-    
-    fileLoc = (char*)malloc(sizeof(char) * MAX_FILENAME_LENGTH);
-    // Number grid
-    numbers = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIME);
-    // Prime numbers
-    last_mark = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIMES);
-    primeArray = (unsigned long int*)malloc(sizeof(unsigned long int) * MAX_PRIMES);
-    
-    // Initialize number grid
-    for(i=0L; i<MAX_PRIME; i++) numbers[i] = 0;
-    
-    // Initialize marks
-    for(i=0L; i<MAX_PRIME; i++) last_mark[i] = 0;
-    
-    // Known primes
-    primeArray[0] = 2;
-    primeArray[1] = 3;
-    primeArray[2] = 5;
-    primeCount = 3;
 
 	/* Time computations */
     unsigned long int totalTime;
@@ -104,10 +85,26 @@ int main(int argc, char *argv[])
 		max_primes = MAX_PRIMES;
 	}
     
-    if(max_prime > MAX_PRIME){
-        printf("Error: the upper limit you set is too high and must be changed in primes.c\n");
-        return 0;
-    }
+    fileLoc = (char*)malloc(sizeof(char) * MAX_FILENAME_LENGTH);
+    
+    // Number grid
+    numbers = (unsigned long int*)malloc(sizeof(unsigned long int) * (max_prime+1));
+    
+    // Prime numbers
+    last_mark = (unsigned long int*)malloc(sizeof(unsigned long int) * (max_primes+1));
+    primeArray = (unsigned long int*)malloc(sizeof(unsigned long int) * (max_primes+1));
+    
+    // Initialize number grid
+    for(i=0L; i<MAX_PRIME; i++) numbers[i] = 0;
+    
+    // Initialize marks
+    for(i=0L; i<MAX_PRIME; i++) last_mark[i] = 0;
+    
+    // Known primes
+    primeArray[0] = 2;
+    primeArray[1] = 3;
+    primeArray[2] = 5;
+    primeCount = 3;
     
     printf("Computing prime numbers...\n");
     
@@ -150,6 +147,7 @@ int main(int argc, char *argv[])
     // =============================================
 
 	printf("%li prime numbers found\n", primeCount);
+    printf("Largest prime found: %li\n", getLargestPrime());
     
     if(timeShow == 0){
 		gettimeofday(&tv2, NULL);
@@ -166,8 +164,8 @@ int main(int argc, char *argv[])
     }else{
         savePrimes("primes.txt", primeArray, primeCount);
     }
-
-	if(verbose == 0){printf("Computed primes have been saved.\n");}
+    
+	printf("Computed primes have been saved.\n");
     
     // Clean up pointers
     free(numbers);
@@ -205,7 +203,7 @@ void updateProgress(unsigned long int a){
 void help()
 {
 	printf("sieve - thomas.lextrait@gmail.com\n");
-	printf("usage: sieve [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
+	printf("usage: ./sieve [-h|-v|-t] [-f<file>] [-m<max prime>] [-q<max primes>]\n");
 	printf("\t-f\tSpecify a file to save primes to,\n\t\totherwise will use 'primes.txt'.\n");
 	printf("\t-m\tSpecify the upper limit for computing primes,\n\t\totherwise will use %li.\n", MAX_PRIME);
 	printf("\t-q\tSpecify how many prime numbers to look for,\n\t\totherwise will use %i.\n", MAX_PRIMES);
